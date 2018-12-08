@@ -50,7 +50,7 @@ to_tensor = transforms.ToTensor()
 
 
 class MyDataloader(data.Dataset):
-    modality_names = ['rgb', 'rgbd', 'd']  # , 'g', 'gd'
+    modality_names = ['rgb', 'd', 'rgbd', 'rgbw']  # , 'g', 'gd'
     color_jitter = transforms.ColorJitter(0.4, 0.4, 0.4)
 
     def __init__(self, root, type, sparsifier=None, modality='rgb', loader=h5_loader):
@@ -96,6 +96,11 @@ class MyDataloader(data.Dataset):
         rgbd = np.append(rgb, np.expand_dims(sparse_depth, axis=2), axis=2)
         return rgbd
 
+    def create_rgbw(self, rgb, depth):
+        sparse_wireless = self.sparsifier.dense_to_spectrum(rgb, depth)
+        rgbw = np.append(rgb, np.expand_dims(sparse_wireless, axis=2), axis=2)
+        return rgbw
+
     def __getraw__(self, index):
         """
         Args:
@@ -121,10 +126,12 @@ class MyDataloader(data.Dataset):
 
         if self.modality == 'rgb':
             input_np = rgb_np
-        elif self.modality == 'rgbd':
-            input_np = self.create_rgbd(rgb_np, depth_np)
         elif self.modality == 'd':
             input_np = self.create_sparse_depth(rgb_np, depth_np)
+        elif self.modality == 'rgbd':
+            input_np = self.create_rgbd(rgb_np, depth_np)
+        elif self.modality == 'rgbw':
+            input_np = self.create_rgbw(rgb_np, depth_np)
 
         input_tensor = to_tensor(input_np)
         while input_tensor.dim() < 3:

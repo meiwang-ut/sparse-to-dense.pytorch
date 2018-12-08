@@ -63,7 +63,6 @@ class AverageMeter(object):
 
     def reset(self):
         self.count = 0.0
-
         self.sum_irmse, self.sum_imae = 0, 0
         self.sum_mse, self.sum_rmse, self.sum_mae = 0, 0, 0
         self.sum_absrel, self.sum_lg10 = 0, 0

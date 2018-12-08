@@ -11,7 +11,8 @@ cudnn.benchmark = True
 
 from models import ResNet
 from metrics import AverageMeter, Result
-from dataloaders.dense_to_sparse import UniformSampling, SimulatedStereo
+from dataloaders.dense_to_sparse import UniformSampling, SimulatedStereo, SimulatedReflector, SimulatedWireless
+from tqdm import tqdm
 import criteria
 import utils
 
@@ -40,14 +41,16 @@ def create_data_loaders(args):
         sparsifier = UniformSampling(num_samples=args.num_samples, max_depth=max_depth)
     elif args.sparsifier == SimulatedStereo.name:
         sparsifier = SimulatedStereo(num_samples=args.num_samples, max_depth=max_depth)
+    elif args.sparsifier == SimulatedStereo.name:
+        sparsifier = SimulatedReflector(num_samples=args.num_samples, max_depth=max_depth)
+    elif args.sparsifier == SimulatedStereo.name:
+        sparsifier = SimulatedWireless(num_samples=args.num_samples, max_depth=max_depth)
 
     if args.data == 'nyudepthv2':
         from dataloaders.nyu_dataloader import NYUDataset
         if not args.evaluate:
-            train_dataset = NYUDataset(traindir, type='train',
-                                       modality=args.modality, sparsifier=sparsifier)
-        val_dataset = NYUDataset(valdir, type='val',
-                                 modality=args.modality, sparsifier=sparsifier)
+            train_dataset = NYUDataset(traindir, type='train', modality=args.modality, sparsifier=sparsifier)
+        val_dataset = NYUDataset(valdir, type='val', modality=args.modality, sparsifier=sparsifier)
 
     elif args.data == 'kitti':
         from dataloaders.kitti_dataloader import KITTIDataset
@@ -126,7 +129,7 @@ def main():
             model = ResNet(layers=18, decoder=args.decoder, output_size=train_loader.dataset.output_size,
                            in_channels=in_channels, pretrained=args.pretrained)
         print("=> model created.")
-        optimizer = torch.optim.SGD(model.parameters(), args.lr, \
+        optimizer = torch.optim.SGD(model.parameters(), args.lr,
                                     momentum=args.momentum, weight_decay=args.weight_decay)
 
         # model = torch.nn.DataParallel(model).cuda() # for multi-gpu training
@@ -167,8 +170,8 @@ def main():
             with open(best_txt, 'w') as txtfile:
                 txtfile.write(
                     "epoch={}\nmse={:.3f}\nrmse={:.3f}\nabsrel={:.3f}\nlg10={:.3f}\nmae={:.3f}\ndelta1={:.3f}\nt_gpu={:.4f}\n".
-                    format(epoch, result.mse, result.rmse, result.absrel, result.lg10, result.mae, result.delta1,
-                           result.gpu_time))
+                        format(epoch, result.mse, result.rmse, result.absrel, result.lg10, result.mae, result.delta1,
+                               result.gpu_time))
             if img_merge is not None:
                 img_filename = output_directory + '/comparison_best.png'
                 utils.save_image(img_merge, img_filename)
@@ -187,7 +190,7 @@ def train(train_loader, model, criterion, optimizer, epoch):
     average_meter = AverageMeter()
     model.train()  # switch to train mode
     end = time.time()
-    for i, (input, target) in enumerate(train_loader):
+    for i, (input, target) in tqdm(enumerate(train_loader)):
 
         input, target = input.cuda(), target.cuda()
         torch.cuda.synchronize()

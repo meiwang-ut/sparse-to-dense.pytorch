@@ -4,6 +4,7 @@ import math
 import random
 
 from PIL import Image, ImageOps, ImageEnhance
+
 try:
     import accimage
 except ImportError:
@@ -22,14 +23,17 @@ import scipy.misc as misc
 def _is_numpy_image(img):
     return isinstance(img, np.ndarray) and (img.ndim in {2, 3})
 
+
 def _is_pil_image(img):
     if accimage is not None:
         return isinstance(img, (Image.Image, accimage.Image))
     else:
         return isinstance(img, Image.Image)
 
+
 def _is_tensor_image(img):
     return torch.is_tensor(img) and img.ndimension() == 3
+
 
 def adjust_brightness(img, brightness_factor):
     """Adjust brightness of an Image.
@@ -114,7 +118,7 @@ def adjust_hue(img, hue_factor):
     Returns:
         PIL Image: Hue adjusted image.
     """
-    if not(-0.5 <= hue_factor <= 0.5):
+    if not (-0.5 <= hue_factor <= 0.5):
         raise ValueError('hue_factor is not in [-0.5, 0.5].'.format(hue_factor))
 
     if not _is_pil_image(img):
@@ -207,7 +211,7 @@ class ToTensor(object):
         Returns:
             Tensor: Converted image.
         """
-        if not(_is_numpy_image(img)):
+        if not (_is_numpy_image(img)):
             raise TypeError('img should be ndarray. Got {}'.format(type(img)))
 
         if isinstance(img, np.ndarray):
@@ -247,13 +251,14 @@ class NormalizeNumpyArray(object):
         Returns:
             Tensor: Normalized image.
         """
-        if not(_is_numpy_image(img)):
+        if not (_is_numpy_image(img)):
             raise TypeError('img should be ndarray. Got {}'.format(type(img)))
         # TODO: make efficient
         print(img.shape)
         for i in range(3):
-            img[:,:,i] = (img[:,:,i] - self.mean[i]) / self.std[i]
+            img[:, :, i] = (img[:, :, i] - self.mean[i]) / self.std[i]
         return img
+
 
 class NormalizeTensor(object):
     """Normalize an tensor image with mean and standard deviation.
@@ -284,6 +289,7 @@ class NormalizeTensor(object):
         for t, m, s in zip(tensor, self.mean, self.std):
             t.sub_(m).div_(s)
         return tensor
+
 
 class Rotate(object):
     """Rotates the given ``numpy.ndarray``.
@@ -395,10 +401,10 @@ class CenterCrop(object):
         h: Height of the cropped image.
         w: Width of the cropped image.
         """
-        if not(_is_numpy_image(img)):
+        if not (_is_numpy_image(img)):
             raise TypeError('img should be ndarray. Got {}'.format(type(img)))
         if img.ndim == 3:
-            return img[i:i+h, j:j+w, :]
+            return img[i:i + h, j:j + w, :]
         elif img.ndim == 2:
             return img[i:i + h, j:j + w]
         else:
@@ -439,7 +445,7 @@ class HorizontalFlip(object):
         Returns:
             img (numpy.ndarray (C x H x W)): flipped image.
         """
-        if not(_is_numpy_image(img)):
+        if not (_is_numpy_image(img)):
             raise TypeError('img should be ndarray. Got {}'.format(type(img)))
 
         if self.do_flip:
@@ -461,6 +467,7 @@ class ColorJitter(object):
         hue(float): How much to jitter hue. hue_factor is chosen uniformly from
             [-hue, hue]. Should be >=0 and <= 0.5.
     """
+
     def __init__(self, brightness=0, contrast=0, saturation=0, hue=0):
         self.brightness = brightness
         self.contrast = contrast
@@ -507,13 +514,14 @@ class ColorJitter(object):
         Returns:
             img (numpy.ndarray (C x H x W)): Color jittered image.
         """
-        if not(_is_numpy_image(img)):
+        if not (_is_numpy_image(img)):
             raise TypeError('img should be ndarray. Got {}'.format(type(img)))
 
         pil = Image.fromarray(img)
         transform = self.get_params(self.brightness, self.contrast,
                                     self.saturation, self.hue)
         return np.array(transform(pil))
+
 
 class Crop(object):
     """Crops the given PIL Image to a rectangular region based on a given
@@ -545,7 +553,7 @@ class Crop(object):
 
         i, j, h, w = self.i, self.j, self.h, self.w
 
-        if not(_is_numpy_image(img)):
+        if not (_is_numpy_image(img)):
             raise TypeError('img should be ndarray. Got {}'.format(type(img)))
         if img.ndim == 3:
             return img[i:i + h, j:j + w, :]
