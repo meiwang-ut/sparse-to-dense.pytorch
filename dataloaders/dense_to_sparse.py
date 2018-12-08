@@ -161,7 +161,7 @@ class SimulatedWireless(DenseToSparse):
         return "%s{ns=%d,md=%f,dil=%d.%d}" % \
                (self.name, self.num_samples, self.max_depth, self.dilate_kernel, self.dilate_iterations)
 
-    def dense_to_spectrum(self, rgb, depth):
+    def dense_to_sparse(self, rgb, depth):
         gray = np.float32(rgb)
         blurred = cv2.GaussianBlur(gray, (5, 5), 0)
         depth_test = blurred.reshape((-1, 3))

@@ -97,7 +97,7 @@ class MyDataloader(data.Dataset):
         return rgbd
 
     def create_rgbw(self, rgb, depth):
-        sparse_wireless = self.sparsifier.dense_to_spectrum(rgb, depth)
+        sparse_wireless = self.sparsifier.dense_to_sparse(rgb, depth)
         rgbw = np.append(rgb, np.expand_dims(sparse_wireless, axis=2), axis=2)
         return rgbw
 
