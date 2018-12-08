@@ -21,20 +21,20 @@ def parse_command():
 
     import argparse
     parser = argparse.ArgumentParser(description='Sparse-to-Dense')
-    parser.add_argument('-s', '--num-samples', default=0, type=int, metavar='N',
-                        help='number of sparse depth samples (default: 0)')
-    parser.add_argument('--sparsifier', metavar='SPARSIFIER', default=UniformSampling.name, choices=sparsifier_names,
-                        help='sparsifier: ' + ' | '.join(sparsifier_names) + ' (default: ' + UniformSampling.name + ')')
-    parser.add_argument('-m', '--modality', metavar='MODALITY', default='rgbd', choices=modality_names,
-                        help='modality: ' + ' | '.join(modality_names) + ' (default: rgbd)')
-    parser.add_argument('-a', '--arch', metavar='ARCH', default='resnet18', choices=model_names,
+    parser.add_argument('--arch', '-a', metavar='ARCH', default='resnet18', choices=model_names,
                         help='model architecture: ' + ' | '.join(model_names) + ' (default: resnet18)')
     parser.add_argument('--data', metavar='DATA', default='nyudepthv2',
                         choices=data_names,
                         help='dataset: ' + ' | '.join(data_names) + ' (default: nyudepthv2)')
+    parser.add_argument('--modality', '-m', metavar='MODALITY', default='rgb', choices=modality_names,
+                        help='modality: ' + ' | '.join(modality_names) + ' (default: rgb)')
+    parser.add_argument('-s', '--num-samples', default=0, type=int, metavar='N',
+                        help='number of sparse depth samples (default: 0)')
     parser.add_argument('--max-depth', default=-1.0, type=float, metavar='D',
                         help='cut-off depth of sparsifier, negative values means infinity (default: inf [m])')
-    parser.add_argument('-d', '--decoder', metavar='DECODER', default='deconv2', choices=decoder_names,
+    parser.add_argument('--sparsifier', metavar='SPARSIFIER', default=UniformSampling.name, choices=sparsifier_names,
+                        help='sparsifier: ' + ' | '.join(sparsifier_names) + ' (default: ' + UniformSampling.name + ')')
+    parser.add_argument('--decoder', '-d', metavar='DECODER', default='deconv2', choices=decoder_names,
                         help='decoder: ' + ' | '.join(decoder_names) + ' (default: deconv2)')
     parser.add_argument('-j', '--workers', default=10, type=int, metavar='N',
                         help='number of data loading workers (default: 10)')
@@ -47,10 +47,10 @@ def parse_command():
                         metavar='LR', help='initial learning rate (default 0.01)')
     parser.add_argument('--momentum', default=0.9, type=float, metavar='M',
                         help='momentum')
-    parser.add_argument('--wd', '--weight_decay', default=1e-4, type=float,
+    parser.add_argument('--weight-decay', '--wd', default=1e-4, type=float,
                         metavar='W', help='weight decay (default: 1e-4)')
-    parser.add_argument('-p', '--print-freq', default=1000, type=int,
-                        metavar='N', help='print frequency (default: 1000)')
+    parser.add_argument('--print-freq', '-p', default=10, type=int,
+                        metavar='N', help='print frequency (default: 10)')
     parser.add_argument('--resume', default='', type=str, metavar='PATH',
                         help='path to latest checkpoint (default: none)')
     parser.add_argument('-e', '--evaluate', dest='evaluate', type=str, default='',
