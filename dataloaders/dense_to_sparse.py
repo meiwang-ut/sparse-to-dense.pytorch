@@ -155,7 +155,6 @@ class SimulatedWireless(DenseToSparse):
         self.max_depth = max_depth
         self.dilate_kernel = dilate_kernel
         self.dilate_iterations = dilate_iterations
-        self.output_size = (228, 304)
 
     def __repr__(self):
         return "%s{ns=%d,md=%f,dil=%d.%d}" % \
@@ -177,7 +176,7 @@ class SimulatedWireless(DenseToSparse):
             s0 = np.sum(a0).astype(np.int)
             y0 = np.mean(idx[1]).astype(np.int)
             dd = depth[x0, y0]
-            z0 = transmap(dd, np.min(depth), np.max(depth), 0, self.output_size[0]-1)
+            z0 = transmap(dd, np.min(depth), np.max(depth), 0, 227)
             rang = min(np.floor(2 * np.log(s0)).astype(np.int), 30)
             print(rang)
             spectrum[z0 - rang:z0 + rang, x0 - rang:x0 + rang] += makeGaussian(rang, rang)
