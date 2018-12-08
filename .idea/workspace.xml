@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="59010339-3a08-4c9d-843f-c0149dd957d0" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/dataloaders/dense_to_sparse.py" beforeDir="false" afterPath="$PROJECT_DIR$/dataloaders/dense_to_sparse.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_sample.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/test_sample.ipynb" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -65,8 +66,8 @@
       <file leaf-file-name="dense_to_sparse.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/dataloaders/dense_to_sparse.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="319">
-              <caret line="179" column="65" selection-start-line="179" selection-start-column="65" selection-end-line="179" selection-end-column="65" />
+            <state relative-caret-position="400">
+              <caret line="184" column="26" lean-forward="true" selection-start-line="184" selection-start-column="26" selection-end-line="184" selection-end-column="26" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
@@ -726,8 +727,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/dataloaders/dense_to_sparse.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="319">
-          <caret line="179" column="65" selection-start-line="179" selection-start-column="65" selection-end-line="179" selection-end-column="65" />
+        <state relative-caret-position="400">
+          <caret line="184" column="26" lean-forward="true" selection-start-line="184" selection-start-column="26" selection-end-line="184" selection-end-column="26" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
           </folding>
