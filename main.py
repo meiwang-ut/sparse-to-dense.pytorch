@@ -6,6 +6,7 @@ import numpy as np
 import torch
 import torch.backends.cudnn as cudnn
 import torch.optim
+
 cudnn.benchmark = True
 
 from models import ResNet
@@ -18,10 +19,11 @@ args = utils.parse_command()
 print(args)
 
 fieldnames = ['mse', 'rmse', 'absrel', 'lg10', 'mae',
-                'delta1', 'delta2', 'delta3',
-                'data_time', 'gpu_time']
+              'delta1', 'delta2', 'delta3',
+              'data_time', 'gpu_time']
 best_result = Result()
 best_result.set_to_worst()
+
 
 def create_data_loaders(args):
     # Data loading code
@@ -43,17 +45,17 @@ def create_data_loaders(args):
         from dataloaders.nyu_dataloader import NYUDataset
         if not args.evaluate:
             train_dataset = NYUDataset(traindir, type='train',
-                modality=args.modality, sparsifier=sparsifier)
+                                       modality=args.modality, sparsifier=sparsifier)
         val_dataset = NYUDataset(valdir, type='val',
-            modality=args.modality, sparsifier=sparsifier)
+                                 modality=args.modality, sparsifier=sparsifier)
 
     elif args.data == 'kitti':
         from dataloaders.kitti_dataloader import KITTIDataset
         if not args.evaluate:
             train_dataset = KITTIDataset(traindir, type='train',
-                modality=args.modality, sparsifier=sparsifier)
+                                         modality=args.modality, sparsifier=sparsifier)
         val_dataset = KITTIDataset(valdir, type='val',
-            modality=args.modality, sparsifier=sparsifier)
+                                   modality=args.modality, sparsifier=sparsifier)
 
     else:
         raise RuntimeError('Dataset not found.' +
@@ -61,18 +63,19 @@ def create_data_loaders(args):
 
     # set batch size to be 1 for validation
     val_loader = torch.utils.data.DataLoader(val_dataset,
-        batch_size=1, shuffle=False, num_workers=args.workers, pin_memory=True)
+                                             batch_size=1, shuffle=False, num_workers=args.workers, pin_memory=True)
 
     # put construction of train loader here, for those who are interested in testing only
     if not args.evaluate:
         train_loader = torch.utils.data.DataLoader(
             train_dataset, batch_size=args.batch_size, shuffle=True,
             num_workers=args.workers, pin_memory=True, sampler=None,
-            worker_init_fn=lambda work_id:np.random.seed(work_id))
-            # worker_init_fn ensures different sampling patterns for each data loading thread
+            worker_init_fn=lambda work_id: np.random.seed(work_id))
+        # worker_init_fn ensures different sampling patterns for each data loading thread
 
     print("=> data loaders created.")
     return train_loader, val_loader
+
 
 def main():
     global args, best_result, output_directory, train_csv, test_csv
@@ -81,7 +84,7 @@ def main():
     start_epoch = 0
     if args.evaluate:
         assert os.path.isfile(args.evaluate), \
-        "=> no best model found at '{}'".format(args.evaluate)
+            "=> no best model found at '{}'".format(args.evaluate)
         print("=> loading best model '{}'".format(args.evaluate))
         checkpoint = torch.load(args.evaluate)
         output_directory = os.path.dirname(args.evaluate)
@@ -118,13 +121,13 @@ def main():
         in_channels = len(args.modality)
         if args.arch == 'resnet50':
             model = ResNet(layers=50, decoder=args.decoder, output_size=train_loader.dataset.output_size,
-                in_channels=in_channels, pretrained=args.pretrained)
+                           in_channels=in_channels, pretrained=args.pretrained)
         elif args.arch == 'resnet18':
             model = ResNet(layers=18, decoder=args.decoder, output_size=train_loader.dataset.output_size,
-                in_channels=in_channels, pretrained=args.pretrained)
+                           in_channels=in_channels, pretrained=args.pretrained)
         print("=> model created.")
         optimizer = torch.optim.SGD(model.parameters(), args.lr, \
-            momentum=args.momentum, weight_decay=args.weight_decay)
+                                    momentum=args.momentum, weight_decay=args.weight_decay)
 
         # model = torch.nn.DataParallel(model).cuda() # for multi-gpu training
         model = model.cuda()
@@ -154,16 +157,18 @@ def main():
 
     for epoch in range(start_epoch, args.epochs):
         utils.adjust_learning_rate(optimizer, epoch, args.lr)
-        train(train_loader, model, criterion, optimizer, epoch) # train for one epoch
-        result, img_merge = validate(val_loader, model, epoch) # evaluate on validation set
+        train(train_loader, model, criterion, optimizer, epoch)  # train for one epoch
+        result, img_merge = validate(val_loader, model, epoch)  # evaluate on validation set
 
         # remember best rmse and save checkpoint
         is_best = result.rmse < best_result.rmse
         if is_best:
             best_result = result
             with open(best_txt, 'w') as txtfile:
-                txtfile.write("epoch={}\nmse={:.3f}\nrmse={:.3f}\nabsrel={:.3f}\nlg10={:.3f}\nmae={:.3f}\ndelta1={:.3f}\nt_gpu={:.4f}\n".
-                    format(epoch, result.mse, result.rmse, result.absrel, result.lg10, result.mae, result.delta1, result.gpu_time))
+                txtfile.write(
+                    "epoch={}\nmse={:.3f}\nrmse={:.3f}\nabsrel={:.3f}\nlg10={:.3f}\nmae={:.3f}\ndelta1={:.3f}\nt_gpu={:.4f}\n".
+                    format(epoch, result.mse, result.rmse, result.absrel, result.lg10, result.mae, result.delta1,
+                           result.gpu_time))
             if img_merge is not None:
                 img_filename = output_directory + '/comparison_best.png'
                 utils.save_image(img_merge, img_filename)
@@ -174,13 +179,13 @@ def main():
             'arch': args.arch,
             'model': model,
             'best_result': best_result,
-            'optimizer' : optimizer,
+            'optimizer': optimizer,
         }, is_best, epoch, output_directory)
 
 
 def train(train_loader, model, criterion, optimizer, epoch):
     average_meter = AverageMeter()
-    model.train() # switch to train mode
+    model.train()  # switch to train mode
     end = time.time()
     for i, (input, target) in enumerate(train_loader):
 
@@ -193,7 +198,7 @@ def train(train_loader, model, criterion, optimizer, epoch):
         pred = model(input)
         loss = criterion(pred, target)
         optimizer.zero_grad()
-        loss.backward() # compute gradient and do SGD step
+        loss.backward()  # compute gradient and do SGD step
         optimizer.step()
         torch.cuda.synchronize()
         gpu_time = time.time() - end
@@ -214,20 +219,20 @@ def train(train_loader, model, criterion, optimizer, epoch):
                   'Delta1={result.delta1:.3f}({average.delta1:.3f}) '
                   'REL={result.absrel:.3f}({average.absrel:.3f}) '
                   'Lg10={result.lg10:.3f}({average.lg10:.3f}) '.format(
-                  epoch, i+1, len(train_loader), data_time=data_time,
-                  gpu_time=gpu_time, result=result, average=average_meter.average()))
+                epoch, i + 1, len(train_loader), data_time=data_time,
+                gpu_time=gpu_time, result=result, average=average_meter.average()))
 
     avg = average_meter.average()
     with open(train_csv, 'a') as csvfile:
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writerow({'mse': avg.mse, 'rmse': avg.rmse, 'absrel': avg.absrel, 'lg10': avg.lg10,
-            'mae': avg.mae, 'delta1': avg.delta1, 'delta2': avg.delta2, 'delta3': avg.delta3,
-            'gpu_time': avg.gpu_time, 'data_time': avg.data_time})
+                         'mae': avg.mae, 'delta1': avg.delta1, 'delta2': avg.delta2, 'delta3': avg.delta3,
+                         'gpu_time': avg.gpu_time, 'data_time': avg.data_time})
 
 
 def validate(val_loader, model, epoch, write_to_file=True):
     average_meter = AverageMeter()
-    model.eval() # switch to evaluate mode
+    model.eval()  # switch to evaluate mode
     end = time.time()
     for i, (input, target) in enumerate(val_loader):
         input, target = input.cuda(), target.cuda()
@@ -255,25 +260,25 @@ def validate(val_loader, model, epoch, write_to_file=True):
             if args.modality == 'rgb':
                 rgb = input
             elif args.modality == 'rgbd':
-                rgb = input[:,:3,:,:]
-                depth = input[:,3:,:,:]
+                rgb = input[:, :3, :, :]
+                depth = input[:, 3:, :, :]
 
             if i == 0:
                 if args.modality == 'rgbd':
                     img_merge = utils.merge_into_row_with_gt(rgb, depth, target, pred)
                 else:
                     img_merge = utils.merge_into_row(rgb, target, pred)
-            elif (i < 8*skip) and (i % skip == 0):
+            elif (i < 8 * skip) and (i % skip == 0):
                 if args.modality == 'rgbd':
                     row = utils.merge_into_row_with_gt(rgb, depth, target, pred)
                 else:
                     row = utils.merge_into_row(rgb, target, pred)
                 img_merge = utils.add_row(img_merge, row)
-            elif i == 8*skip:
+            elif i == 8 * skip:
                 filename = output_directory + '/comparison_' + str(epoch) + '.png'
                 utils.save_image(img_merge, filename)
 
-        if (i+1) % args.print_freq == 0:
+        if (i + 1) % args.print_freq == 0:
             print('Test: [{0}/{1}]\t'
                   't_GPU={gpu_time:.3f}({average.gpu_time:.3f})\n\t'
                   'RMSE={result.rmse:.2f}({average.rmse:.2f}) '
@@ -281,26 +286,27 @@ def validate(val_loader, model, epoch, write_to_file=True):
                   'Delta1={result.delta1:.3f}({average.delta1:.3f}) '
                   'REL={result.absrel:.3f}({average.absrel:.3f}) '
                   'Lg10={result.lg10:.3f}({average.lg10:.3f}) '.format(
-                   i+1, len(val_loader), gpu_time=gpu_time, result=result, average=average_meter.average()))
+                i + 1, len(val_loader), gpu_time=gpu_time, result=result, average=average_meter.average()))
 
     avg = average_meter.average()
 
     print('\n*\n'
-        'RMSE={average.rmse:.3f}\n'
-        'MAE={average.mae:.3f}\n'
-        'Delta1={average.delta1:.3f}\n'
-        'REL={average.absrel:.3f}\n'
-        'Lg10={average.lg10:.3f}\n'
-        't_GPU={time:.3f}\n'.format(
+          'RMSE={average.rmse:.3f}\n'
+          'MAE={average.mae:.3f}\n'
+          'Delta1={average.delta1:.3f}\n'
+          'REL={average.absrel:.3f}\n'
+          'Lg10={average.lg10:.3f}\n'
+          't_GPU={time:.3f}\n'.format(
         average=avg, time=avg.gpu_time))
 
     if write_to_file:
         with open(test_csv, 'a') as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
             writer.writerow({'mse': avg.mse, 'rmse': avg.rmse, 'absrel': avg.absrel, 'lg10': avg.lg10,
-                'mae': avg.mae, 'delta1': avg.delta1, 'delta2': avg.delta2, 'delta3': avg.delta3,
-                'data_time': avg.data_time, 'gpu_time': avg.gpu_time})
+                             'mae': avg.mae, 'delta1': avg.delta1, 'delta2': avg.delta2, 'delta3': avg.delta3,
+                             'data_time': avg.data_time, 'gpu_time': avg.gpu_time})
     return avg, img_merge
+
 
 if __name__ == '__main__':
     main()
