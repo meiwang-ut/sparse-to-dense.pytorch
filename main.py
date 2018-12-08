@@ -273,12 +273,12 @@ def validate(val_loader, model, epoch, write_to_file=True):
         else:
             if args.modality == 'rgb':
                 rgb = input
-            elif args.modality == 'rgbd':
+            elif args.modality == 'rgbd' or args.modality == 'rgbw':
                 rgb = input[:, :3, :, :]
                 depth = input[:, 3:, :, :]
 
             if i == 0:
-                if args.modality == 'rgbd':
+                if args.modality == 'rgbd' or args.modality == 'rgbw':
                     img_merge = utils.merge_into_row_with_gt(rgb, depth, target, pred)
                 else:
                     img_merge = utils.merge_into_row(rgb, target, pred)
