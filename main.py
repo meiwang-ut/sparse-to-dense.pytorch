@@ -129,8 +129,7 @@ def main():
             model = ResNet(layers=18, decoder=args.decoder, output_size=train_loader.dataset.output_size,
                            in_channels=in_channels, pretrained=args.pretrained)
         print("=> model created.")
-        optimizer = torch.optim.SGD(model.parameters(), args.lr,
-                                    momentum=args.momentum, weight_decay=args.weight_decay)
+        optimizer = torch.optim.SGD(model.parameters(), args.lr, momentum=args.momentum, weight_decay=args.weight_decay)
 
         # model = torch.nn.DataParallel(model).cuda() # for multi-gpu training
         model = model.cuda()

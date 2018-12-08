@@ -27,7 +27,6 @@ def parse_command():
                         help='sparsifier: ' + ' | '.join(sparsifier_names) + ' (default: ' + UniformSampling.name + ')')
     parser.add_argument('-m', '--modality', metavar='MODALITY', default='rgbd', choices=modality_names,
                         help='modality: ' + ' | '.join(modality_names) + ' (default: rgbd)')
-
     parser.add_argument('-a', '--arch', metavar='ARCH', default='resnet18', choices=model_names,
                         help='model architecture: ' + ' | '.join(model_names) + ' (default: resnet18)')
     parser.add_argument('--data', metavar='DATA', default='nyudepthv2',
