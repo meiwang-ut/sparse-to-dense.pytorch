@@ -176,13 +176,9 @@ class SimulatedWireless(DenseToSparse):
             s0 = np.sum(a0).astype(np.int)
             y0 = np.mean(idx[1]).astype(np.int)
             dd = depth[x0, y0]
-            z0 = transmap(dd, np.min(depth), np.max(depth), 0, 227)
-            rang = min(np.floor(2 * np.log(s0)).astype(np.int), 20)
-            print("rang: {}".format(rang))
-            a = spectrum[z0 - rang:z0 + rang, x0 - rang:x0 + rang]
-            print(a.shape)
-            b = makeGaussian(rang, rang)
-            print(b.shape)
-            spectrum[z0 - rang:z0 + rang, x0 - rang:x0 + rang] += makeGaussian(rang, rang)
+            x1 = transmap(x0, 0, 304, 27, 277)
+            z0 = transmap(dd, np.min(depth), np.max(depth), 27, 200)
+            rang = min(np.floor(2 * np.log(s0)).astype(np.int), 27)
+            spectrum[z0 - rang:z0 + rang, x1 - rang:x1 + rang] += makeGaussian(rang, rang)
         return spectrum
 
