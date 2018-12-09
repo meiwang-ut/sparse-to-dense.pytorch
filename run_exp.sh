@@ -25,15 +25,15 @@
 
 
 # tacc cs398t
-python3 main.py -a resnet50 -d upproj -m rgb -s 0
+python main.py -a resnet50 -d upproj -m rgb -s 0
 
-python3 main.py -a resnet50 -d upproj -m rgbd -s 5 --sparsifier uar
-python3 main.py -a resnet50 -d upproj -m rgbd -s 10 --sparsifier uar
-python3 main.py -a resnet50 -d upproj -m rgbd -s 100 --sparsifier uar
+python main.py -a resnet50 -d upproj -m rgbd -s 5 --sparsifier uar
+python main.py -a resnet50 -d upproj -m rgbd -s 10 --sparsifier uar
+python main.py -a resnet50 -d upproj -m rgbd -s 100 --sparsifier uar
 
-python3 main.py -a resnet50 -d upproj -m rgbd -s 5 --sparsifier  sim_reflector
-python3 main.py -a resnet50 -d upproj -m rgbd -s 10 --sparsifier  sim_reflector
-python3 main.py -a resnet50 -d upproj -m rgbd -s 100 --sparsifier  sim_reflector
+python main.py -a resnet50 -d upproj -m rgbd -s 5 --sparsifier  sim_reflector
+python main.py -a resnet50 -d upproj -m rgbd -s 10 --sparsifier  sim_reflector
+python main.py -a resnet50 -d upproj -m rgbd -s 100 --sparsifier  sim_reflector
 
 
 # tacc tracking
