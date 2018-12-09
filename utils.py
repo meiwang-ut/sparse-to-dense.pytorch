@@ -31,7 +31,7 @@ def parse_command():
                         help='number of sparse depth samples (default: 0)')
     parser.add_argument('--sparsifier', metavar='SPARSIFIER', default=UniformSampling.name, choices=sparsifier_names,
                         help='sparsifier: ' + ' | '.join(sparsifier_names) + ' (default: ' + UniformSampling.name + ')')
-    parser.add_argument('--epochs', default=20, type=int, metavar='N',
+    parser.add_argument('--epochs', default=10, type=int, metavar='N',
                         help='number of total epochs to run (default: 15)')
 
     parser.add_argument('--data', metavar='DATA', default='nyudepthv2',
