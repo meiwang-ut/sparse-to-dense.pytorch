@@ -12,6 +12,7 @@ def parse_command():
     model_names = ['resnet18', 'resnet50']
     loss_names = ['l1', 'l2']
     data_names = ['nyudepthv2', 'kitti']
+    cuda_numbers = [0, 1, 2]
     from dataloaders.dense_to_sparse import UniformSampling, SimulatedStereo, SimulatedReflector, SimulatedWireless
     sparsifier_names = [x.name for x in [UniformSampling, SimulatedStereo, SimulatedReflector, SimulatedWireless]]
     from models import Decoder
@@ -23,6 +24,8 @@ def parse_command():
     parser = argparse.ArgumentParser(description='Sparse-to-Dense')
     parser.add_argument('--arch', '-a', metavar='ARCH', default='resnet18', choices=model_names,
                         help='model architecture: ' + ' | '.join(model_names) + ' (default: resnet18)')
+    parser.add_argument('--cuda', '-g', metavar='CUDA', default=1, choices=cuda_numbers,
+                        help='run on gpu: ' + ' | '.join(cuda_numbers) + ' (default: 1)')
     parser.add_argument('--decoder', '-d', metavar='DECODER', default='deconv2', choices=decoder_names,
                         help='decoder: ' + ' | '.join(decoder_names) + ' (default: deconv2)')
     parser.add_argument('--modality', '-m', metavar='MODALITY', default='rgb', choices=modality_names,
@@ -33,8 +36,6 @@ def parse_command():
                         help='sparsifier: ' + ' | '.join(sparsifier_names) + ' (default: ' + UniformSampling.name + ')')
     parser.add_argument('--epochs', default=10, type=int, metavar='N',
                         help='number of total epochs to run (default: 15)')
-    parser.add_argument('--cuda', '-g', metavar='CUDA', default=1, choices='0,1,2',
-                        help='use gpu number: 0,1,2' + ' (default: 1)')
 
     parser.add_argument('--data', metavar='DATA', default='nyudepthv2',
                         choices=data_names,
