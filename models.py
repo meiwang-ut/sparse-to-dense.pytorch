@@ -4,6 +4,9 @@ import torch.nn.functional as F
 import torchvision.models
 import collections
 import math
+import utils
+
+args = utils.parse_command()
 
 
 class Unpool(nn.Module):
@@ -16,7 +19,7 @@ class Unpool(nn.Module):
 
         # create kernel [1, 0; 0, 0]
         self.weights = torch.autograd.Variable(
-            torch.zeros(num_channels, 1, stride, stride).cuda())  # currently not compatible with running on CPU
+            utils.gpu(torch.zeros(num_channels, 1, stride, stride), args.cuda))  # currently not compatible with running on CPU
         self.weights[:, :, 0, 0] = 1
 
     def forward(self, x):

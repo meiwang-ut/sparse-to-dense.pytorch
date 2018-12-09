@@ -131,14 +131,14 @@ def main():
         print("=> model created.")
         optimizer = torch.optim.SGD(model.parameters(), args.lr, momentum=args.momentum, weight_decay=args.weight_decay)
 
-        # model = torch.nn.DataParallel(model).cuda() # for multi-gpu training
-        model = model.cuda()
+        # model = utils.gpu(torch.nn.DataParallel(model), args.cuda) # for multi-gpu training
+        model = utils.gpu(model, args.cuda)
 
     # define loss function (criterion) and optimizer
     if args.criterion == 'l2':
-        criterion = criteria.MaskedMSELoss().cuda()
+        criterion = utils.gpu(criteria.MaskedMSELoss(), args.cuda)
     elif args.criterion == 'l1':
-        criterion = criteria.MaskedL1Loss().cuda()
+        criterion = utils.gpu(criteria.MaskedL1Loss(), args.cuda)
 
     # create results folder, if not already exists
     output_directory = utils.get_output_directory(args)
@@ -191,7 +191,7 @@ def train(train_loader, model, criterion, optimizer, epoch):
     end = time.time()
     for i, (input, target) in tqdm(enumerate(train_loader)):
 
-        input, target = input.cuda(), target.cuda()
+        input, target = utils.gpu(input, args.cuda), utils.gpu(target, args.cuda)
         torch.cuda.synchronize()
         data_time = time.time() - end
 
@@ -249,7 +249,7 @@ def validate(val_loader, model, epoch, write_to_file=True):
     model.eval()  # switch to evaluate mode
     end = time.time()
     for i, (input, target) in enumerate(val_loader):
-        input, target = input.cuda(), target.cuda()
+        input, target = utils.gpu(input, args.cuda), utils.gpu(target, args.cuda)
         torch.cuda.synchronize()
         data_time = time.time() - end
 

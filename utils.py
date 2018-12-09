@@ -33,6 +33,8 @@ def parse_command():
                         help='sparsifier: ' + ' | '.join(sparsifier_names) + ' (default: ' + UniformSampling.name + ')')
     parser.add_argument('--epochs', default=10, type=int, metavar='N',
                         help='number of total epochs to run (default: 15)')
+    parser.add_argument('--cuda', '-g', metavar='CUDA', default=1, choices='0,1,2',
+                        help='use gpu number: 0,1,2' + ' (default: 1)')
 
     parser.add_argument('--data', metavar='DATA', default='nyudepthv2',
                         choices=data_names,
@@ -145,3 +147,12 @@ def add_row(img_merge, row):
 def save_image(img_merge, filename):
     img_merge = Image.fromarray(img_merge.astype('uint8'))
     img_merge.save(filename)
+
+
+def gpu(tensor, gpunum=0):
+
+    if gpunum:
+        device = torch.device("cuda:%d" % (gpunum-1))
+        return tensor.to(device)
+    else:
+        return tensor
