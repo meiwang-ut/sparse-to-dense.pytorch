@@ -175,14 +175,14 @@ def main():
                 img_filename = output_directory + '/comparison_best.png'
                 utils.save_image(img_merge, img_filename)
 
-        utils.save_checkpoint({
-            'args': args,
-            'epoch': epoch,
-            'arch': args.arch,
-            'model': model,
-            'best_result': best_result,
-            'optimizer': optimizer,
-        }, is_best, epoch, output_directory)
+        # utils.save_checkpoint({
+        #     'args': args,
+        #     'epoch': epoch,
+        #     'arch': args.arch,
+        #     'model': model,
+        #     'best_result': best_result,
+        #     'optimizer': optimizer,
+        # }, is_best, epoch, output_directory)
 
 
 def train(train_loader, model, criterion, optimizer, epoch):
