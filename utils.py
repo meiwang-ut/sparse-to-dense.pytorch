@@ -24,8 +24,8 @@ def parse_command():
     parser = argparse.ArgumentParser(description='Sparse-to-Dense')
     parser.add_argument('--arch', '-a', metavar='ARCH', default='resnet18', choices=model_names,
                         help='model architecture: ' + ' | '.join(model_names) + ' (default: resnet18)')
-    parser.add_argument('--cuda', '-g', metavar='CUDA', default=1, choices=cuda_numbers,
-                        help='run on gpu: ' + ' | '.join(cuda_numbers) + ' (default: 1)')
+    parser.add_argument('--cuda', '-g', metavar='CUDA', default=1, type=int, choices=cuda_numbers,
+                        help='run on gpu: ' + ' | '.join(str(cuda_numbers)) + ' (default: 1)')
     parser.add_argument('--decoder', '-d', metavar='DECODER', default='deconv2', choices=decoder_names,
                         help='decoder: ' + ' | '.join(decoder_names) + ' (default: deconv2)')
     parser.add_argument('--modality', '-m', metavar='MODALITY', default='rgb', choices=modality_names,
