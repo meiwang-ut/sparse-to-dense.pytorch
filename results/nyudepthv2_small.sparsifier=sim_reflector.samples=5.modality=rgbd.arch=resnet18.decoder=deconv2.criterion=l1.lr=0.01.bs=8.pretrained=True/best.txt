@@ -1,0 +1,8 @@
+epoch=6
+mse=0.047
+rmse=0.213
+absrel=0.135
+lg10=0.058
+mae=0.165
+delta1=0.815
+t_gpu=0.0791
