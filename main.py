@@ -46,7 +46,7 @@ def create_data_loaders(args):
     elif args.sparsifier == SimulatedWireless.name:
         sparsifier = SimulatedWireless(num_samples=args.num_samples, max_depth=max_depth)
 
-    if args.data == 'nyudepthv2':
+    if args.data == 'nyudepthv2' or args.data == 'nyudepthv2_small':
         from dataloaders.nyu_dataloader import NYUDataset
         if not args.evaluate:
             train_dataset = NYUDataset(traindir, type='train', modality=args.modality, sparsifier=sparsifier)
@@ -62,7 +62,7 @@ def create_data_loaders(args):
 
     else:
         raise RuntimeError('Dataset not found.' +
-                           'The dataset must be either of nyudepthv2 or kitti.')
+                           'The dataset must be either of nyudepthv2 nyudepthv2_small or kitti.')
 
     # set batch size to be 1 for validation
     val_loader = torch.utils.data.DataLoader(val_dataset,

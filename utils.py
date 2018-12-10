@@ -11,7 +11,7 @@ cmap = plt.cm.viridis
 def parse_command():
     model_names = ['resnet18', 'resnet50']
     loss_names = ['l1', 'l2']
-    data_names = ['nyudepthv2', 'kitti']
+    data_names = ['nyudepthv2', 'nyudepthv2_small', 'kitti']
     cuda_numbers = [0, 1, 2]
     from dataloaders.dense_to_sparse import UniformSampling, SimulatedStereo, SimulatedReflector, SimulatedWireless
     sparsifier_names = [x.name for x in [UniformSampling, SimulatedStereo, SimulatedReflector, SimulatedWireless]]
@@ -36,7 +36,6 @@ def parse_command():
                         help='sparsifier: ' + ' | '.join(sparsifier_names) + ' (default: ' + UniformSampling.name + ')')
     parser.add_argument('--epochs', default=10, type=int, metavar='N',
                         help='number of total epochs to run (default: 15)')
-
     parser.add_argument('--data', metavar='DATA', default='nyudepthv2',
                         choices=data_names,
                         help='dataset: ' + ' | '.join(data_names) + ' (default: nyudepthv2)')
