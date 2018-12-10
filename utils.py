@@ -12,7 +12,7 @@ def parse_command():
     model_names = ['resnet18', 'resnet50']
     loss_names = ['l1', 'l2']
     data_names = ['nyudepthv2', 'nyudepthv2_small', 'kitti']
-    cuda_numbers = [0, 1, 2]
+    cuda_numbers = [0, 1, 2, 3, 4]
     from dataloaders.dense_to_sparse import UniformSampling, SimulatedStereo, SimulatedReflector, SimulatedWireless
     sparsifier_names = [x.name for x in [UniformSampling, SimulatedStereo, SimulatedReflector, SimulatedWireless]]
     from models import Decoder

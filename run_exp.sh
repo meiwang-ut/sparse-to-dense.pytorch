@@ -50,13 +50,14 @@
 #python3 main.py -a resnet50 -d deconv3 -m rgbd -s 100 --sparsifier  sim_reflector
 
 ## eldar-1 gpu 2
-python3 main.py -a resnet18 -d deconv2 -m rgbd -s 5 --sparsifier sim_reflector --data nyudepthv2_small -g 2
-python3 main.py -a resnet18 -d deconv2 -m rgbd -s 10 --sparsifier sim_reflector --data nyudepthv2_small -g 2
-python3 main.py -a resnet18 -d deconv2 -m rgbd -s 100 --sparsifier sim_reflector --data nyudepthv2_small -g 2
+#python3 main.py -a resnet18 -d deconv2 -m rgbd -s 5 --sparsifier sim_reflector --data nyudepthv2_small -g 2
+#python3 main.py -a resnet18 -d deconv2 -m rgbd -s 10 --sparsifier sim_reflector --data nyudepthv2_small -g 2
+#python3 main.py -a resnet18 -d deconv2 -m rgbd -s 100 --sparsifier sim_reflector --data nyudepthv2_small -g 2
 
-#python3 main.py -a resnet50 -d deconv3 -m rgbd -s 5 --sparsifier sim_reflector -g 2
-#python3 main.py -a resnet50 -d deconv3 -m rgbd -s 10 --sparsifier sim_reflector -g 2
-#python3 main.py -a resnet50 -d deconv3 -m rgbd -s 100 --sparsifier sim_reflector -g 2
+## tacc2 tracking
+python3 main.py -a resnet50 -d deconv3 -m rgbd -s 5 --sparsifier sim_reflector -g 1
+python3 main.py -a resnet50 -d deconv3 -m rgbd -s 10 --sparsifier sim_reflector -g 2
+python3 main.py -a resnet50 -d deconv3 -m rgbd -s 100 --sparsifier sim_reflector -g 3
 
 
 ## tacc cs398t
