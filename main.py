@@ -41,7 +41,7 @@ def create_data_loaders(args):
         sparsifier = UniformSampling(num_samples=args.num_samples, max_depth=max_depth)
     elif args.sparsifier == SimulatedStereo.name:
         sparsifier = SimulatedStereo(num_samples=args.num_samples, max_depth=max_depth)
-    elif args.sparsifier == SimulatedStereo.name:
+    elif args.sparsifier == SimulatedReflector.name:
         sparsifier = SimulatedReflector(num_samples=args.num_samples, max_depth=max_depth)
     elif args.sparsifier == SimulatedWireless.name:
         sparsifier = SimulatedWireless(num_samples=args.num_samples, max_depth=max_depth)
